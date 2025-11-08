@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetLife Pro - Strategic Business Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --card-bg: #334155;
+            --text-light: #e2e8f0;
+            --text-dark: #1e293b;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] {
+            --dark: #f1f5f9;
+            --light: #1e293b;
+            --card-bg: #ffffff;
+            --text-light: #1e293b;
+            --text-dark: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, #0f172a 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        [data-theme="light"] body {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] .nav-bar {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-light);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-light);
+            padding: 0.75rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        [data-theme="light"] .card {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .icon-success { background: var(--success); }
+        .icon-warning { background: var(--warning); }
+        .icon-danger { background: var(--danger); }
+        .icon-primary { background: var(--primary); }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        [data-theme="light"] .metric {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+
+        .status-high { background: var(--danger); }
+        .status-medium { background: var(--warning); }
+        .status-low { background: var(--success); }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            z-index: 1;
+        }
+
+        .timeline-phase {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .phase-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .path-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .path-a { background: rgba(16, 185, 129, 0.2); border: 2px solid var(--success); }
+        .path-b { background: rgba(239, 68, 68, 0.2); border: 2px solid var(--danger); }
+
+        .netlife-response {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        [data-theme="light"] .netlife-response {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-bar {
+                padding: 1rem;
+            }
+            
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <!-- Navigation Bar -->
+        <nav class="nav-bar">
+            <div class="nav-left">
+                <div class="logo">NetLife Pro</div>
+                <button class="nav-btn" onclick="showView('dashboard')">
+                    <i class="fas fa-home"></i> Home
+                </button>
+                <button class="nav-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button class="nav-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button class="nav-btn" onclick="goForward()">
+                    <i class="fas fa-arrow-right"></i> Forward
+                </button>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </nav>
+
+        <!-- Main Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <!-- Strategic Overview Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon icon-primary">
+                        <i class="fas fa-chess-king"></i>
+                    </div>
+                    <h2 class="card-title">Strategic Position</h2>
+                </div>
+                <div class="metric-grid">
+                    <div class="metric">
+                        <div class="metric-value">R2.1B</div>
+                        <div class="metric-label">Network Asset Value</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">64%</div>
+                        <div class="metric-label">Modernization Index</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">#3</div>
+                        <div class="metric-label">Market Position</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">R45M</div>
+                        <div class="metric-label">Revenue at Risk</div>
+                    </div>
+                </div>
+                <div class="netlife-response">
+                    <strong>NetLife Pro:</strong> "We're at a strategic inflection point. We can become South Africa's digital infrastructure leader, or become a commodity provider fighting on price."
+                </div>
+            </div>
+
+            <!-- Competitive Landscape -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon icon-warning">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h2 class="card-title">Competitive Landscape</h2>
+                </div>
+                <div class="metric-grid">
+                    <div class="metric">
+                        <div class="metric-value">Vodacom</div>
+                        <div class="metric-label">🏆 Technology Leader</div>
+                        <div class="status-badge status-high">80% Faster</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">MTN</div>
+                        <div class="metric-label">🥈 Reliable Follower</div>
+                        <div class="status-badge status-medium">80% Modernized</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">Telkom</div>
+                        <div class="metric-label">🥉 Cost Leader</div>
+                        <div class="status-badge status-high">64% Modernized</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">Liquid</div>
+                        <div class="metric-label">🎯 Niche Player</div>
+                        <div class="status-badge status-low">+15% Share</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Investment Pathway -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon icon-success">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h2 class="card-title">Strategic Investment Pathway</h2>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-phase">
+                        <div class="phase-dot">1</div>
+                        <div><strong>Secure Foundation</strong></div>
+                        <div>R45M</div>
+                        <div>Months 1-12</div>
+                    </div>
+                    <div class="timeline-phase">
+                        <div class="phase-dot">2</div>
+                        <div><strong>Competitive Parity</strong></div>
+                        <div>R28M</div>
+                        <div>Months 7-18</div>
+                    </div>
+                    <div class="timeline-phase">
+                        <div class="phase-dot">3</div>
+                        <div><strong>Market Leadership</strong></div>
+                        <div>R32M</div>
+                        <div>Months 13-24</div>
+                    </div>
+                </div>
+                <div class="netlife-response">
+                    <strong>Total Investment:</strong> R105M over 24 months<br>
+                    <strong>Expected ROI:</strong> 42% | <strong>Payback:</strong> 20 months
+                </div>
+            </div>
+
+            <!-- Business Case -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon icon-danger">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h2 class="card-title">Financial Impact Analysis</h2>
+                </div>
+                <div class="metric-grid">
+                    <div class="metric">
+                        <div class="metric-value">R135M</div>
+                        <div class="metric-label">Revenue Protected (3yr)</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">R54M</div>
+                        <div class="metric-label">OpEx Reduced (3yr)</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">R45M</div>
+                        <div class="metric-label">New Revenue (3yr)</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">R36M</div>
+                        <div class="metric-label">Risk Mitigation (3yr)</div>
+                    </div>
+                </div>
+                <div class="netlife-response">
+                    <strong>NetLife Pro:</strong> "Every month of delay costs R3.75M in lost opportunities and competitive positioning."
+                </div>
+            </div>
+
+            <!-- Strategic Choice -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon icon-primary">
+                        <i class="fas fa-crossroads"></i>
+                    </div>
+                    <h2 class="card-title">Strategic Crossroads</h2>
+                </div>
+                <div class="comparison">
+                    <div class="path-card path-a">
+                        <h3>🚀 Path A: Bold Investment</h3>
+                        <p>Invest R105M to become market leader</p>
+                        <p>Capture R800M new market by 2025</p>
+                        <p>Shareholder value: +R10B</p>
+                    </div>
+                    <div class="path-card path-b">
+                        <h3>⚠️ Path B: Cautious Delay</h3>
+                        <p>Save R105M short-term</p>
+                        <p>Accept permanent #3 position</p>
+                        <p>Lose R450M enterprise business</p>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="showDecisionModal()">
+                    <i class="fas fa-play"></i> Start NetLife Pro Demo
+                </button>
+            </div>
+
+            <!-- Client Impact -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon icon-warning">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h2 class="card-title">Client Impact Analysis</h2>
+                </div>
+                <div class="metric-grid">
+                    <div class="metric">
+                        <div class="metric-value">Jackson Lee</div>
+                        <div class="metric-label">R1.2M/month at risk</div>
+                        <div class="status-badge status-high">90-day renewal</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">Ajay Maharaj</div>
+                        <div class="metric-label">R250M/year potential</div>
+                        <div class="status-badge status-medium">3-month win-back</div>
+                    </div>
+                </div>
+                <div class="netlife-response">
+                    <strong>NetLife Pro:</strong> "Jackson Lee's ecosystem represents R45M in influenced revenue. Their recommendation to peers is our most powerful growth lever."
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Navigation Functions
+        let viewHistory = ['dashboard'];
+        let currentViewIndex = 0;
+
+        function showView(viewName) {
+            console.log(`Showing view: ${viewName}`);
+            // Add view to history if it's new
+            if (viewHistory[viewHistory.length - 1] !== viewName) {
+                viewHistory.push(viewName);
+                currentViewIndex = viewHistory.length - 1;
+            }
+        }
+
+        function goBack() {
+            if (currentViewIndex > 0) {
+                currentViewIndex--;
+                showView(viewHistory[currentViewIndex]);
+            }
+        }
+
+        function goForward() {
+            if (currentViewIndex < viewHistory.length - 1) {
+                currentViewIndex++;
+                showView(viewHistory[currentViewIndex]);
+            }
+        }
+
+        function refreshData() {
+            // Simulate data refresh
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.opacity = '0.7';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                }, 300);
+            });
+            
+            // Show refresh notification
+            const response = document.querySelector('.netlife-response');
+            if (response) {
+                response.innerHTML = '<strong>NetLife Pro:</strong> "Data refreshed. All metrics current as of latest market analysis."';
+            }
+        }
+
+        function showDecisionModal() {
+            alert('🚀 NetLife Pro Demo Sequence Started!\n\n' +
+                  '1. Strategic Wake-up Call\n' +
+                  '2. Competitive Diagnosis  \n' +
+                  '3. Investment Pathway\n' +
+                  '4. Business Case\n' +
+                  '5. Decision Point\n\n' +
+                  'The CEO must choose: Invest R105M for market leadership or accept permanent #3 position.');
+        }
+
+        // Initialize with some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers to cards for demo purposes
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.addEventListener('click', function() {
+                    const responses = [
+                        '"Our analysis shows 35% of core assets reach EOL in 18 months"',
+                        '"Vodacom\'s automation advantage costs us R15M monthly in lost opportunities"',
+                        '"Phased approach ensures we protect current revenue while building future capabilities"',
+                        '"The numbers are conservative - we\'ve built in 20% contingency buffers"',
+                        '"This isn\'t a technology choice - it\'s a business strategy decision"',
+                        '"Jackson Lee represents R45M in ecosystem influence - their satisfaction is strategic"'
+                    ];
+                    
+                    const response = this.querySelector('.netlife-response');
+                    if (response && index < responses.length) {
+                        response.innerHTML = `<strong>NetLife Pro:</strong> ${responses[index]}`;
+                    }
+                });
+            });
+
+            console.log('NetLife Pro Strategic Platform Loaded');
+            console.log('Ready for Telkom Executive Demo');
+        });
+    </script>
+</body>
+</html>
