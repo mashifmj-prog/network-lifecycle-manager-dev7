@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetLife Pro - Strategic Business Platform</title>
+    <title>NetLife Pro - AI Strategic Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -103,6 +103,12 @@
             transform: translateY(-2px);
         }
 
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .theme-toggle {
             background: rgba(255, 255, 255, 0.1);
             border: none;
@@ -111,6 +117,52 @@
             border-radius: 12px;
             cursor: pointer;
             font-size: 1.2rem;
+        }
+
+        /* Demo Controller */
+        .demo-controller {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .demo-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .demo-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.5s ease;
         }
 
         /* Dashboard */
@@ -176,10 +228,21 @@
             padding: 1rem;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
+            transition: all 0.3s ease;
         }
 
         [data-theme="light"] .metric {
             background: rgba(0, 0, 0, 0.05);
+        }
+
+        .metric.updating {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .metric-value {
@@ -240,6 +303,12 @@
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .phase-dot.active {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px var(--primary);
         }
 
         .comparison {
@@ -253,10 +322,14 @@
             padding: 1.5rem;
             border-radius: 12px;
             text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .path-a { background: rgba(16, 185, 129, 0.2); border: 2px solid var(--success); }
         .path-b { background: rgba(239, 68, 68, 0.2); border: 2px solid var(--danger); }
+        .path-card:hover { transform: translateY(-5px); }
+        .path-card.selected { box-shadow: 0 0 30px currentColor; }
 
         .netlife-response {
             background: rgba(255, 255, 255, 0.05);
@@ -264,10 +337,31 @@
             padding: 1.5rem;
             margin-top: 1rem;
             border-left: 4px solid var(--primary);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
         }
 
         [data-theme="light"] .netlife-response {
             background: rgba(0, 0, 0, 0.05);
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1s infinite;
+        }
+
+        .typing-indicator:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         .btn-primary {
@@ -284,6 +378,66 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
+        }
+
+        /* AI Chat Interface */
+        .ai-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .message.ai {
+            background: rgba(37, 99, 235, 0.2);
+            margin-right: auto;
+        }
+
+        .message.user {
+            background: rgba(255, 255, 255, 0.1);
+            margin-left: auto;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: var(--text-light);
         }
 
         /* Responsive */
@@ -303,6 +457,12 @@
             .comparison {
                 grid-template-columns: 1fr;
             }
+            
+            .ai-chat {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+            }
         }
     </style>
 </head>
@@ -318,10 +478,10 @@
                 <button class="nav-btn" onclick="refreshData()">
                     <i class="fas fa-sync-alt"></i> Refresh
                 </button>
-                <button class="nav-btn" onclick="goBack()">
+                <button class="nav-btn" id="backBtn" onclick="goBack()" disabled>
                     <i class="fas fa-arrow-left"></i> Back
                 </button>
-                <button class="nav-btn" onclick="goForward()">
+                <button class="nav-btn" id="forwardBtn" onclick="goForward()" disabled>
                     <i class="fas fa-arrow-right"></i> Forward
                 </button>
             </div>
@@ -329,6 +489,20 @@
                 <i class="fas fa-moon"></i>
             </button>
         </nav>
+
+        <!-- Demo Controller -->
+        <div class="demo-controller">
+            <button class="demo-btn" onclick="startDemo()">
+                <i class="fas fa-play"></i> Start CEO Demo
+            </button>
+            <button class="demo-btn secondary" onclick="toggleAI()">
+                <i class="fas fa-robot"></i> Ask NetLife Pro
+            </button>
+            <div class="progress-bar">
+                <div class="progress-fill" id="demoProgress"></div>
+            </div>
+            <div id="demoStatus">Ready to start strategic demo</div>
+        </div>
 
         <!-- Main Dashboard -->
         <div id="dashboard" class="dashboard">
@@ -341,25 +515,25 @@
                     <h2 class="card-title">Strategic Position</h2>
                 </div>
                 <div class="metric-grid">
-                    <div class="metric">
+                    <div class="metric" id="assetValue">
                         <div class="metric-value">R2.1B</div>
                         <div class="metric-label">Network Asset Value</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" id="modernizationIndex">
                         <div class="metric-value">64%</div>
                         <div class="metric-label">Modernization Index</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" id="marketPosition">
                         <div class="metric-value">#3</div>
                         <div class="metric-label">Market Position</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" id="revenueRisk">
                         <div class="metric-value">R45M</div>
                         <div class="metric-label">Revenue at Risk</div>
                     </div>
                 </div>
-                <div class="netlife-response">
-                    <strong>NetLife Pro:</strong> "We're at a strategic inflection point. We can become South Africa's digital infrastructure leader, or become a commodity provider fighting on price."
+                <div class="netlife-response" id="response1">
+                    <strong>NetLife Pro:</strong> "Click Start Demo or ask me anything about our strategic position."
                 </div>
             </div>
 
@@ -372,22 +546,22 @@
                     <h2 class="card-title">Competitive Landscape</h2>
                 </div>
                 <div class="metric-grid">
-                    <div class="metric">
+                    <div class="metric" onclick="askAI('Tell me about Vodacom competitive advantage')">
                         <div class="metric-value">Vodacom</div>
                         <div class="metric-label">🏆 Technology Leader</div>
                         <div class="status-badge status-high">80% Faster</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" onclick="askAI('How does MTN compare to us?')">
                         <div class="metric-value">MTN</div>
                         <div class="metric-label">🥈 Reliable Follower</div>
                         <div class="status-badge status-medium">80% Modernized</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" onclick="askAI('What are our main competitive weaknesses?')">
                         <div class="metric-value">Telkom</div>
                         <div class="metric-label">🥉 Cost Leader</div>
                         <div class="status-badge status-high">64% Modernized</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" onclick="askAI('What threat does Liquid pose?')">
                         <div class="metric-value">Liquid</div>
                         <div class="metric-label">🎯 Niche Player</div>
                         <div class="status-badge status-low">+15% Share</div>
@@ -405,25 +579,25 @@
                 </div>
                 <div class="timeline">
                     <div class="timeline-phase">
-                        <div class="phase-dot">1</div>
+                        <div class="phase-dot" id="phase1">1</div>
                         <div><strong>Secure Foundation</strong></div>
                         <div>R45M</div>
                         <div>Months 1-12</div>
                     </div>
                     <div class="timeline-phase">
-                        <div class="phase-dot">2</div>
+                        <div class="phase-dot" id="phase2">2</div>
                         <div><strong>Competitive Parity</strong></div>
                         <div>R28M</div>
                         <div>Months 7-18</div>
                     </div>
                     <div class="timeline-phase">
-                        <div class="phase-dot">3</div>
+                        <div class="phase-dot" id="phase3">3</div>
                         <div><strong>Market Leadership</strong></div>
                         <div>R32M</div>
                         <div>Months 13-24</div>
                     </div>
                 </div>
-                <div class="netlife-response">
+                <div class="netlife-response" id="response3">
                     <strong>Total Investment:</strong> R105M over 24 months<br>
                     <strong>Expected ROI:</strong> 42% | <strong>Payback:</strong> 20 months
                 </div>
@@ -438,25 +612,25 @@
                     <h2 class="card-title">Financial Impact Analysis</h2>
                 </div>
                 <div class="metric-grid">
-                    <div class="metric">
+                    <div class="metric" id="revenueProtected">
                         <div class="metric-value">R135M</div>
                         <div class="metric-label">Revenue Protected (3yr)</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" id="opexReduced">
                         <div class="metric-value">R54M</div>
                         <div class="metric-label">OpEx Reduced (3yr)</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" id="newRevenue">
                         <div class="metric-value">R45M</div>
                         <div class="metric-label">New Revenue (3yr)</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" id="riskMitigation">
                         <div class="metric-value">R36M</div>
                         <div class="metric-label">Risk Mitigation (3yr)</div>
                     </div>
                 </div>
-                <div class="netlife-response">
-                    <strong>NetLife Pro:</strong> "Every month of delay costs R3.75M in lost opportunities and competitive positioning."
+                <div class="netlife-response" id="response4">
+                    <!-- Dynamic responses will appear here -->
                 </div>
             </div>
 
@@ -469,22 +643,22 @@
                     <h2 class="card-title">Strategic Crossroads</h2>
                 </div>
                 <div class="comparison">
-                    <div class="path-card path-a">
+                    <div class="path-card path-a" id="pathA" onclick="selectPath('A')">
                         <h3>🚀 Path A: Bold Investment</h3>
                         <p>Invest R105M to become market leader</p>
                         <p>Capture R800M new market by 2025</p>
                         <p>Shareholder value: +R10B</p>
                     </div>
-                    <div class="path-card path-b">
+                    <div class="path-card path-b" id="pathB" onclick="selectPath('B')">
                         <h3>⚠️ Path B: Cautious Delay</h3>
                         <p>Save R105M short-term</p>
                         <p>Accept permanent #3 position</p>
                         <p>Lose R450M enterprise business</p>
                     </div>
                 </div>
-                <button class="btn-primary" onclick="showDecisionModal()">
-                    <i class="fas fa-play"></i> Start NetLife Pro Demo
-                </button>
+                <div class="netlife-response" id="response5">
+                    Click a path to see NetLife Pro's analysis
+                </div>
             </div>
 
             <!-- Client Impact -->
@@ -496,25 +670,82 @@
                     <h2 class="card-title">Client Impact Analysis</h2>
                 </div>
                 <div class="metric-grid">
-                    <div class="metric">
+                    <div class="metric" onclick="askAI('Tell me about Jackson Lee business impact')">
                         <div class="metric-value">Jackson Lee</div>
                         <div class="metric-label">R1.2M/month at risk</div>
                         <div class="status-badge status-high">90-day renewal</div>
                     </div>
-                    <div class="metric">
+                    <div class="metric" onclick="askAI('How do we win back Ajay Maharaj?')">
                         <div class="metric-value">Ajay Maharaj</div>
                         <div class="metric-label">R250M/year potential</div>
                         <div class="status-badge status-medium">3-month win-back</div>
                     </div>
                 </div>
-                <div class="netlife-response">
-                    <strong>NetLife Pro:</strong> "Jackson Lee's ecosystem represents R45M in influenced revenue. Their recommendation to peers is our most powerful growth lever."
+                <div class="netlife-response" id="response6">
+                    Click client names for detailed strategies
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- AI Chat Interface -->
+    <div class="ai-chat" id="aiChat">
+        <div class="chat-header">
+            <strong>NetLife Pro AI Assistant</strong>
+            <button class="nav-btn" onclick="toggleAI()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai">
+                Hello! I'm NetLife Pro, your strategic business partner. Ask me anything about our competitive position, investment strategy, or client impact analysis.
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Ask NetLife Pro..." onkeypress="handleChatInput(event)">
+            <button class="nav-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
     <script>
+        // Demo State Management
+        let demoState = {
+            currentStep: 0,
+            totalSteps: 6,
+            isRunning: false,
+            selectedPath: null
+        };
+
+        // AI Knowledge Base
+        const aiKnowledge = {
+            greetings: [
+                "I'm NetLife Pro, your strategic business partner. I analyze our R2.1B network infrastructure to provide data-driven insights for leadership decisions.",
+                "Welcome to NetLife Pro. I specialize in transforming network data into strategic business intelligence for Telkom's competitive advantage."
+            ],
+            competitive: {
+                vodacom: "Vodacom's automation platform gives them 80% faster enterprise provisioning. They're investing R65M annually in AI-driven operations, creating a significant service velocity gap.",
+                mtn: "MTN has completed 80% of their network modernization, achieving 28% margin improvement. They're focusing on reliability over innovation, making them a strong #2.",
+                liquid: "Liquid is a niche player gaining 15% market share through cloud-focused services. They're not a direct threat yet, but they're capturing the high-growth cloud connectivity segment.",
+                telkom: "Our main weaknesses are aging infrastructure (64% modernization vs 80% for MTN) and slower service delivery. However, we maintain a cost advantage that's eroding monthly."
+            },
+            investment: {
+                phase1: "Phase 1 (R45M) secures our foundation by replacing EOL core routers. This protects R450M in existing enterprise revenue and stops the bleeding.",
+                phase2: "Phase 2 (R28M) closes the automation gap with Vodacom. This investment pays back in 18 months through R18M annual OpEx reduction.",
+                phase3: "Phase 3 (R32M) positions us for market leadership in SD-WAN and edge computing, capturing R800M in new market opportunities by 2025."
+            },
+            clients: {
+                jackson: "Jackson Lee represents R1.2M monthly revenue with 12 enterprise referrals in banking. Their 90-day renewal is critical - we're showing 3% packet loss while Vodacom offers 99.99% guarantees.",
+                ajay: "Ajay Maharaj is a R250M opportunity we lost to Vodacom. Our win-back strategy focuses on predictive performance guarantees for their trading platform, with a 90-day timeline to demonstrate superiority."
+            },
+            financials: {
+                roi: "The R105M investment delivers 42% ROI over 3 years. Every month of delay costs R3.75M in lost opportunities and competitive positioning.",
+                risk: "Without investment, we risk losing R450M in enterprise revenue to Vodacom and dropping to permanent #4 position in premium services.",
+                urgency: "The market window is 24 months. Vodacom is 12 months ahead, and MTN is 6 months ahead. Delay makes catch-up exponentially more expensive."
+            }
+        };
+
         // Theme Management
         function toggleTheme() {
             const body = document.body;
@@ -530,13 +761,18 @@
         let viewHistory = ['dashboard'];
         let currentViewIndex = 0;
 
+        function updateNavButtons() {
+            document.getElementById('backBtn').disabled = currentViewIndex === 0;
+            document.getElementById('forwardBtn').disabled = currentViewIndex === viewHistory.length - 1;
+        }
+
         function showView(viewName) {
             console.log(`Showing view: ${viewName}`);
-            // Add view to history if it's new
             if (viewHistory[viewHistory.length - 1] !== viewName) {
                 viewHistory.push(viewName);
                 currentViewIndex = viewHistory.length - 1;
             }
+            updateNavButtons();
         }
 
         function goBack() {
@@ -553,57 +789,229 @@
             }
         }
 
-        function refreshData() {
-            // Simulate data refresh
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                card.style.opacity = '0.7';
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                }, 300);
-            });
+        // Demo Control Functions
+        function startDemo() {
+            if (demoState.isRunning) return;
             
-            // Show refresh notification
-            const response = document.querySelector('.netlife-response');
-            if (response) {
-                response.innerHTML = '<strong>NetLife Pro:</strong> "Data refreshed. All metrics current as of latest market analysis."';
+            demoState.isRunning = true;
+            demoState.currentStep = 0;
+            
+            document.getElementById('demoStatus').textContent = 'Starting strategic analysis...';
+            document.getElementById('demoProgress').style.width = '0%';
+            
+            // Step through demo automatically
+            const demoSteps = [
+                { duration: 2000, action: step1 },
+                { duration: 2500, action: step2 },
+                { duration: 3000, action: step3 },
+                { duration: 2500, action: step4 },
+                { duration: 3000, action: step5 },
+                { duration: 2000, action: step6 }
+            ];
+            
+            function executeStep(stepIndex) {
+                if (stepIndex >= demoSteps.length) {
+                    demoState.isRunning = false;
+                    document.getElementById('demoStatus').textContent = 'Demo complete - Ready for decisions';
+                    return;
+                }
+                
+                demoState.currentStep = stepIndex;
+                const progress = ((stepIndex + 1) / demoSteps.length) * 100;
+                document.getElementById('demoProgress').style.width = `${progress}%`;
+                
+                demoSteps[stepIndex].action();
+                
+                setTimeout(() => {
+                    executeStep(stepIndex + 1);
+                }, demoSteps[stepIndex].duration);
+            }
+            
+            executeStep(0);
+        }
+
+        function step1() {
+            document.getElementById('demoStatus').textContent = 'Analyzing strategic position...';
+            updateMetricWithAnimation('modernizationIndex', '58%');
+            updateMetricWithAnimation('revenueRisk', 'R52M');
+            showResponse('response1', "NetLife Pro: We're at a strategic inflection point. Our modernization index dropped to 58% while revenue risk increased to R52M. Immediate action is required.");
+        }
+
+        function step2() {
+            document.getElementById('demoStatus').textContent = 'Assessing competitive landscape...';
+            const competitors = document.querySelectorAll('.metric-grid .metric');
+            competitors.forEach(metric => {
+                metric.classList.add('updating');
+                setTimeout(() => metric.classList.remove('updating'), 1000);
+            });
+            showResponse('response1', "NetLife Pro: Vodacom's automation advantage is costing us R15M monthly in lost enterprise opportunities. We're falling behind in the race for premium clients.");
+        }
+
+        function step3() {
+            document.getElementById('demoStatus').textContent = 'Building investment pathway...';
+            document.getElementById('phase1').classList.add('active');
+            updateMetricWithAnimation('revenueProtected', 'R148M');
+            showResponse('response3', "NetLife Pro: Phase 1 investment of R45M protects R148M in revenue over 3 years. The business case strengthens when we consider client ecosystem impacts.");
+        }
+
+        function step4() {
+            document.getElementById('demoStatus').textContent = 'Calculating financial impact...';
+            document.getElementById('phase2').classList.add('active');
+            updateMetricWithAnimation('opexReduced', 'R62M');
+            updateMetricWithAnimation('newRevenue', 'R52M');
+            showResponse('response4', "NetLife Pro: The R28M automation investment reduces OpEx by R62M over 3 years and enables R52M in new revenue through faster service delivery.");
+        }
+
+        function step5() {
+            document.getElementById('demoStatus').textContent = 'Evaluating strategic options...';
+            document.getElementById('phase3').classList.add('active');
+            showResponse('response5', "NetLife Pro: Path A positions us for market leadership with R10B in shareholder value creation. Path B accepts permanent #3 position and R450M in revenue loss.");
+        }
+
+        function step6() {
+            document.getElementById('demoStatus').textContent = 'Finalizing recommendations...';
+            showResponse('response6', "NetLife Pro: Jackson Lee's decision in 90 days will influence R45M in banking sector revenue. Our investment directly addresses their performance concerns.");
+            // Reset phases for interactivity
+            setTimeout(() => {
+                document.querySelectorAll('.phase-dot').forEach(dot => dot.classList.remove('active'));
+            }, 1000);
+        }
+
+        function updateMetricWithAnimation(metricId, newValue) {
+            const metric = document.getElementById(metricId);
+            const valueElement = metric.querySelector('.metric-value');
+            metric.classList.add('updating');
+            
+            setTimeout(() => {
+                valueElement.textContent = newValue;
+                metric.classList.remove('updating');
+            }, 800);
+        }
+
+        function showResponse(responseId, message) {
+            const responseElement = document.getElementById(responseId);
+            responseElement.innerHTML = `<strong>NetLife Pro:</strong> ${message}`;
+        }
+
+        function selectPath(path) {
+            document.getElementById('pathA').classList.remove('selected');
+            document.getElementById('pathB').classList.remove('selected');
+            document.getElementById(`path${path}`).classList.add('selected');
+            
+            demoState.selectedPath = path;
+            
+            if (path === 'A') {
+                showResponse('response5', "NetLife Pro: Excellent choice. Path A transforms Telkom into a market leader. I recommend immediate approval of the R45M Phase 1 investment to secure our foundation.");
+            } else {
+                showResponse('response5', "NetLife Pro: Path B carries significant risk. We'll lose R450M in enterprise revenue and drop to #4 position. The R105M 'savings' will cost us R10B in market capitalization.");
             }
         }
 
-        function showDecisionModal() {
-            alert('🚀 NetLife Pro Demo Sequence Started!\n\n' +
-                  '1. Strategic Wake-up Call\n' +
-                  '2. Competitive Diagnosis  \n' +
-                  '3. Investment Pathway\n' +
-                  '4. Business Case\n' +
-                  '5. Decision Point\n\n' +
-                  'The CEO must choose: Invest R105M for market leadership or accept permanent #3 position.');
+        // AI Chat Functions
+        function toggleAI() {
+            const chat = document.getElementById('aiChat');
+            chat.style.display = chat.style.display === 'none' ? 'block' : 'none';
         }
 
-        // Initialize with some interactive elements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add click handlers to cards for demo purposes
-            const cards = document.querySelectorAll('.card');
-            cards.forEach((card, index) => {
-                card.addEventListener('click', function() {
-                    const responses = [
-                        '"Our analysis shows 35% of core assets reach EOL in 18 months"',
-                        '"Vodacom\'s automation advantage costs us R15M monthly in lost opportunities"',
-                        '"Phased approach ensures we protect current revenue while building future capabilities"',
-                        '"The numbers are conservative - we\'ve built in 20% contingency buffers"',
-                        '"This isn\'t a technology choice - it\'s a business strategy decision"',
-                        '"Jackson Lee represents R45M in ecosystem influence - their satisfaction is strategic"'
-                    ];
-                    
-                    const response = this.querySelector('.netlife-response');
-                    if (response && index < responses.length) {
-                        response.innerHTML = `<strong>NetLife Pro:</strong> ${responses[index]}`;
-                    }
-                });
-            });
+        function askAI(question) {
+            toggleAI();
+            setTimeout(() => {
+                document.getElementById('chatInput').value = question;
+                sendMessage();
+            }, 500);
+        }
 
+        function handleChatInput(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addChatMessage(message, 'user');
+            input.value = '';
+            
+            // Simulate AI thinking
+            setTimeout(() => {
+                const response = generateAIResponse(message);
+                addChatMessage(response, 'ai');
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function addChatMessage(message, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${sender}`;
+            messageElement.textContent = message;
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function generateAIResponse(question) {
+            const lowerQuestion = question.toLowerCase();
+            
+            // Simple pattern matching for demo purposes
+            if (lowerQuestion.includes('vodacom') || lowerQuestion.includes('competitor')) {
+                return aiKnowledge.competitive.vodacom;
+            } else if (lowerQuestion.includes('mtn')) {
+                return aiKnowledge.competitive.mtn;
+            } else if (lowerQuestion.includes('liquid')) {
+                return aiKnowledge.competitive.liquid;
+            } else if (lowerQuestion.includes('weakness') || lowerQuestion.includes('problem')) {
+                return aiKnowledge.competitive.telkom;
+            } else if (lowerQuestion.includes('investment') || lowerQuestion.includes('phase')) {
+                if (lowerQuestion.includes('1')) return aiKnowledge.investment.phase1;
+                if (lowerQuestion.includes('2')) return aiKnowledge.investment.phase2;
+                if (lowerQuestion.includes('3')) return aiKnowledge.investment.phase3;
+                return "Our R105M investment over 24 months delivers 42% ROI. Phase 1 (R45M) secures our foundation, Phase 2 (R28M) achieves competitive parity, Phase 3 (R32M) establishes market leadership.";
+            } else if (lowerQuestion.includes('jackson')) {
+                return aiKnowledge.clients.jackson;
+            } else if (lowerQuestion.includes('ajay') || lowerQuestion.includes('maharaj')) {
+                return aiKnowledge.clients.ajay;
+            } else if (lowerQuestion.includes('roi') || lowerQuestion.includes('return')) {
+                return aiKnowledge.financials.roi;
+            } else if (lowerQuestion.includes('risk') || lowerQuestion.includes('urgent')) {
+                return aiKnowledge.financials.risk + " " + aiKnowledge.financials.urgency;
+            } else if (lowerQuestion.includes('hello') || lowerQuestion.includes('hi')) {
+                return aiKnowledge.greetings[Math.floor(Math.random() * aiKnowledge.greetings.length)];
+            } else {
+                return "I understand you're asking about " + question + ". As NetLife Pro, I focus on strategic business intelligence, competitive analysis, and investment optimization for Telkom's network infrastructure. Could you be more specific about the business impact you're concerned with?";
+            }
+        }
+
+        // Data Refresh Simulation
+        function refreshData() {
+            document.getElementById('demoStatus').textContent = 'Refreshing live market data...';
+            
+            // Simulate API calls and data updates
+            const metrics = ['assetValue', 'modernizationIndex', 'marketPosition', 'revenueRisk'];
+            metrics.forEach(metric => {
+                const element = document.getElementById(metric);
+                element.classList.add('updating');
+            });
+            
+            setTimeout(() => {
+                metrics.forEach(metric => {
+                    const element = document.getElementById(metric);
+                    element.classList.remove('updating');
+                });
+                document.getElementById('demoStatus').textContent = 'Data updated with latest market intelligence';
+                showResponse('response1', 'NetLife Pro: All metrics refreshed with real-time data. Our competitive position remains urgent - Vodacom just announced another R50M automation investment.');
+            }, 2000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNavButtons();
             console.log('NetLife Pro Strategic Platform Loaded');
-            console.log('Ready for Telkom Executive Demo');
+            console.log('AI Knowledge Base: Competitive Analysis, Investment Strategy, Client Impact');
+            console.log('Demo Mode: Ready - Click "Start CEO Demo" for automated presentation');
         });
     </script>
 </body>
